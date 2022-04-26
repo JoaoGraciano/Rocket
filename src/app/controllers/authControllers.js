@@ -14,6 +14,8 @@ const path = require('path');
 const authConfig = require('../../config/auth');
 
 const User = require('../models/user');
+const Cad = require('../models/cadastro');
+const Usua = require('../models/usuario');
 const jsonwebtoken = require('jsonwebtoken');
 const { findOneAndUpdate } = require('../models/user');
 const { transporter } = require('../../modules/mailer');
@@ -40,8 +42,43 @@ router.post('/register', async (req, res) => {
         console.log(user)
 
         user.password = undefined;
-
+ 
         return res.json({ user });
+    } catch (err) {
+        return res.status(400).send({error: err});
+    }
+})
+
+router.post('/cadastro', async (req, res) => {
+    let { curso, grau, duracao, valor, descricao } = req.body;
+    try{
+        if( await Cad.findOne({ curso }))
+            return res.status(400).send({error: 'Curso já cadastrado'});
+
+            const cad = await Cad.create({curso, grau, duracao, valor, descricao});
+            console.log(cad)
+
+        return res.json({ cad });
+    } catch (err) {
+        return res.status(400).send({error: err});
+    }
+})
+
+router.post('/usuario', async (req, res) => {
+    let { name, login, password } = req.body;
+    try{
+        if( await Usua.findOne({ login }))
+            return res.status(400).send({error: 'User already exist'});
+
+            const hash = await bcrypt.hash(password, 10);
+            password = hash;
+
+        const usua = await Usua.create({name, login, password});
+        console.log(usua)
+
+        usua.password = undefined;
+ 
+        return res.json({ usua });
     } catch (err) {
         return res.status(400).send({error: err});
     }
