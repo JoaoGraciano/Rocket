@@ -29,7 +29,6 @@ const UserSchema = new mongoose.Schema({
     },
     user: {
         type: {Object},
-        require: true,
     },
     createdAt: {
         type: Date,
