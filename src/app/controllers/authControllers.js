@@ -20,6 +20,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const { findOneAndUpdate } = require('../models/user');
 const { transporter } = require('../../modules/mailer');
 const transport = require('../../modules/mailer');
+const Venda = require('../models/venda');
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.post('/register', async (req, res) => {
     } catch (err) {
         return res.status(400).send({error: err});
     }
-})
+});
 
 router.post('/cadastro', async (req, res) => {
     let { curso, grau, duracao, valor, descricao } = req.body;
@@ -62,7 +63,22 @@ router.post('/cadastro', async (req, res) => {
     } catch (err) {
         return res.status(400).send({error: err});
     }
-})
+});
+
+router.post('/venda', async (req, res) => {
+    let { nome, cpf, cidade, idade, curso, valor, user } = req.body;
+    try{
+        if( await Venda.findOne({ cpf }))
+            return res.status(400).send({error: 'Venda não foi realizada'});
+
+            const venda = await Venda.create({nome, cpf, cidade, idade, curso, valor, user});
+            console.log(venda)
+
+        return res.json({ venda });
+    } catch (err) {
+        return res.status(400).send({error: err});
+    }
+});
 
 router.post('/usuario', async (req, res) => {
     let { name, login, password } = req.body;
@@ -82,7 +98,7 @@ router.post('/usuario', async (req, res) => {
     } catch (err) {
         return res.status(400).send({error: err});
     }
-})
+});
 
 router.post('/authenticate', async (req, res) => {
     const { email, password } = req.body;
@@ -173,6 +189,6 @@ router.post('/reset_password', async (req, res) => {
     } catch (err) {
         res.status(400).send({error: 'Cannor reser password, try again'});
     };
-})
+});
 
 module.exports = app => app.use('/auth', router);

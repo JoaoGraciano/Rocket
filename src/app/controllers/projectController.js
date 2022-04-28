@@ -6,6 +6,8 @@ const authMiddleware = require('../middlewares/auth');
 const Project = require('../models/project');
 const Task = require('../models/task');
 const Cad = require('../models/cadastro');
+const Venda = require('../models/venda');
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -14,6 +16,26 @@ router.use(authMiddleware);
 router.get('/', async (req, res) => {
     try {
         const projects = await Cad.find()
+
+        return res.send({projects});
+    } catch (err) {
+        return res.status(400).send({error: 'Error loading project'});
+    }
+});
+
+router.get('/user', async (req, res) => {
+    try {
+        const projects = await User.find()
+
+        return res.send({projects});
+    } catch (err) {
+        return res.status(400).send({error: 'Error loading project'});
+    }
+});
+
+router.get('/venda', async (req, res) => {
+    try {
+        const projects = await Venda.find()
 
         return res.send({projects});
     } catch (err) {
