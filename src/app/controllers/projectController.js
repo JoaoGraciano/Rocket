@@ -104,14 +104,33 @@ router.put('/:projectId', async (req, res) => {
     }
 });
 
+// router.delete('/:projectId', async (req, res) => {
+//     try {
+//         const projects = await Venda.findByIdAndRemove(req.params.projectId);
+
+//         return res.send({projects});
+//     } catch (err) {
+//         return res.status(400).send({error: 'Error loading project'});
+//     }
+// });
+
 router.delete('/:projectId', async (req, res) => {
     try {
-        const projects = await Venda.findByIdAndRemove(req.params.projectId);
-
-        return res.send({projects});
-    } catch (err) {
-        return res.status(400).send({error: 'Error loading project'});
+        await Cad.findByIdAndRemove(req.params.projectId)
+        console.log(req.params.projectId)
+      return res.status(200).json()
+    } catch (error) {
+      return res.status(400).json({ error: 'Error loading project' })
     }
-});
+  })
 
+  router.delete('/:projectId', async (req, res) => {
+    try {
+        await Venda.findByIdAndRemove(req.params.projectId)
+        console.log(req.params.projectId)
+      return res.status(200).json()
+    } catch (error) {
+      return res.status(400).json({ error: 'Error loading project' })
+    }
+  })
 module.exports = app => app.use('/projects', router); 
