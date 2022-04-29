@@ -79,16 +79,16 @@ router.post('/', async (req, res) => {
 
 router.put('/:projectId', async (req, res) => {
     try {
-        const { title, descripton, tasks } = req.body;
+        const { nome, cpf, cidade, idade, curso, valor } = req.body;
 
-        const project = await Project.findByIdAndUpdate(req.params.projectId, {
+        const project = await Venda.findByIdAndUpdate(req.params.projectId, {
             title, descripton}, {new: true});
 
             project.tasks = [];
-            await Task.remove({project:project._id});
+            await Venda.remove({project:project._id});
 
         await Promise.all (tasks.map(async task => {
-            const projectTask = new Task({... task, project: project._id});
+            const projectTask = new Venda({... nome, cpf, cidade, idade, curso, valor: project._id});
 
             await projectTask.save();
 
@@ -106,7 +106,7 @@ router.put('/:projectId', async (req, res) => {
 
 router.delete('/:projectId', async (req, res) => {
     try {
-        const projects = await Project.findByIdAndRemove(req.params.projectId).populate('user');
+        const projects = await Venda.findByIdAndRemove(req.params.projectId);
 
         return res.send({projects});
     } catch (err) {
