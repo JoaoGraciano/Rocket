@@ -34,8 +34,9 @@ router.get('/user', async (req, res) => {
 });
 
 router.get('/venda', async (req, res) => {
+  
     try {
-        const projects = await Venda.find()
+        const projects = await Venda.find().populate(['user'])
 
         return res.send({projects});
     } catch (err) {

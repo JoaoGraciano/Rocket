@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 
 const path = require('path');
-
+const authMiddleware = require('../middlewares/auth');
 
 const authConfig = require('../../config/auth');
 
@@ -65,8 +65,9 @@ router.post('/cadastro', async (req, res) => {
     }
 });
 
-router.post('/venda', async (req, res) => {
-    let { nome, cpf, cidade, idade, curso, valor, user } = req.body;
+router.post('/venda',authMiddleware, async (req, res) => {
+    let { nome, cpf, cidade, idade, curso, valor } = req.body;
+    const user = req.userId
     try{
         if( await Venda.findOne({ cpf }))
             return res.status(400).send({error: 'Venda não foi realizada'});
