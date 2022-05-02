@@ -99,20 +99,40 @@ router.put('/:projectId', async (req, res) => {
 
         return res.send({project});
     } catch (err) {
+        console.log("erro aqui")
         console.log(err);
         return res.status(400).send({error: 'Error creating new project'});
     }
 });
 
-// router.delete('/:projectId', async (req, res) => {
-//     try {
-//         const projects = await Venda.findByIdAndRemove(req.params.projectId);
+router.put('/update', async (req, res) => {
+    try {
+        const { curso, grau, duracao, valor, descricao } = req.body;
 
-//         return res.send({projects});
-//     } catch (err) {
-//         return res.status(400).send({error: 'Error loading project'});
-//     }
-// });
+        const project = await Cad.findByIdAndUpdate(req.params.projectId, {
+            curso, grau, duracao, valor, descricao}, {new: true});
+
+            project.tasks = [];
+            await Cad.remove({project:project._id});
+
+        await Promise.all (tasks.map(async task => {
+            const projectTask = new Cad({... curso, grau, duracao, valor, descricao: project._id});
+
+            await projectTask.save();
+
+            project.tasks.push(projectTask);
+        }));
+
+        await project.save();
+
+        return res.send({project});
+    } catch (err) {
+        console.log(err);
+        console.log("erro aqui2")
+        return res.status(400).send({error: 'Error creating new project'});
+    }
+});
+
 
 router.delete('/:projectId', async (req, res) => {
     try {
