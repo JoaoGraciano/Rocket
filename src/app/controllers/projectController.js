@@ -8,6 +8,7 @@ const Task = require('../models/task');
 const Cad = require('../models/cadastro');
 const Venda = require('../models/venda');
 const User = require('../models/user');
+const Contato = require('../models/contato');
 
 const router = express.Router();
 
@@ -37,6 +38,17 @@ router.get('/venda', async (req, res) => {
   
     try {
         const projects = await Venda.find().populate(['user'])
+
+        return res.send({projects});
+    } catch (err) {
+        return res.status(400).send({error: 'Error loading project'});
+    }
+});
+
+router.get('/contato', async (req, res) => {
+  
+    try {
+        const projects = await Contato.find()
 
         return res.send({projects});
     } catch (err) {

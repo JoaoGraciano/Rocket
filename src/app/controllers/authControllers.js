@@ -21,6 +21,7 @@ const { findOneAndUpdate } = require('../models/user');
 const { transporter } = require('../../modules/mailer');
 const transport = require('../../modules/mailer');
 const Venda = require('../models/venda');
+const Contato = require('../models/contato');
 
 const router = express.Router();
 
@@ -60,6 +61,21 @@ router.post('/cadastro', async (req, res) => {
             console.log(cad)
 
         return res.json({ cad });
+    } catch (err) {
+        return res.status(400).send({error: err});
+    }
+});
+
+router.post('/contato', async (req, res) => {
+    let { email, nome, telefone, duvidas } = req.body;
+    try{
+        if( await Contato.findOne({ email }))
+            return res.status(400).send({error: 'E-mail já utilizado para contato'});
+
+            const contato = await Contato.create({email, nome, telefone, duvidas});
+            console.log(contato)
+
+        return res.json({ contato });
     } catch (err) {
         return res.status(400).send({error: err});
     }
