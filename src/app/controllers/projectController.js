@@ -56,6 +56,17 @@ router.get('/contato', async (req, res) => {
     }
 });
 
+router.get('/Cad', async (req, res) => {
+  
+    try {
+        const projects = await Cad.find()
+
+        return res.send({projects});
+    } catch (err) {
+        return res.status(400).send({error: 'Error loading project'});
+    }
+});
+
 router.get('/:projectId', async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId).populate('user');
