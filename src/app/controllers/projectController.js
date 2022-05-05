@@ -156,7 +156,6 @@ router.put('/update', async (req, res) => {
     }
 });
 
-
 router.delete('/:projectId', async (req, res) => {
     try {
         await Cad.findByIdAndRemove(req.params.projectId)
