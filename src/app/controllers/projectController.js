@@ -156,33 +156,33 @@ router.put('/update', async (req, res) => {
     }
 });
 
-router.delete('/:projectId', async (req, res) => {
+router.delete('/:contatoId', async (req, res) => {
     try {
-        await Contato.findByIdAndRemove(req.params.projectId)
-        console.log(req.params.projectId, '1')
+        await Contato.findByIdAndRemove(req.params.contatoId)
+        console.log(req.params.contatoId, '1')
       return res.status(200).json()
     } catch (error) {
-      return res.status(400).json({ error: 'Error loading project' })
+      return res.status(400).json({ error: 'Error deleting contato' })
     }
   });
 
-router.delete('/:projectId', async (req, res) => {
+router.delete('/:cadId', async (req, res) => {
     try {
-        await Cad.findByIdAndRemove(req.params.projectId)
-        console.log(req.params.projectId, '3')
+        await Cad.findByIdAndRemove(req.params.cadId)
+        console.log(req.params.cadId, '3')
       return res.status(200).json()
     } catch (error) {
-      return res.status(400).json({ error: 'Error loading project' })
+      return res.status(400).json({ error: 'Error deleting cadastro' })
     }
   });
 
-router.delete('/:projectId', async (req, res) => {
+router.delete('/:vendaId', async (req, res) => {
     try {
-        await Venda.findByIdAndRemove(req.params.projectId)
-        console.log(req.params.projectId, '2')
+        await Venda.findByIdAndRemove(req.params.vendaId)
+        console.log(req.params.vendaId, '2')
       return res.status(200).json()
     } catch (error) {
-      return res.status(400).json({ error: 'Error loading project' })
+      return res.status(400).json({ error: 'Error deleting venda' })
     }
   });
 
