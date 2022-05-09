@@ -32,7 +32,7 @@ function geneateToken(params = {}) {
 }
 
 router.post('/register', async (req, res) => {
-    let { name,email, password } = req.body;
+    let { name, email, password } = req.body;
     try{
         if( await User.findOne({ email }))
             return res.status(400).send({error: 'User already exist'});
@@ -67,12 +67,12 @@ router.post('/cadastro', async (req, res) => {
 });
 
 router.post('/contato', async (req, res) => {
-    let { email, nome, telefone, duvidas } = req.body;
+    let { email, nome, telefone, cidade } = req.body;
     try{
         if( await Contato.findOne({ email }))
             return res.status(400).send({error: 'E-mail já utilizado para contato'});
 
-            const contato = await Contato.create({email, nome, telefone, duvidas});
+            const contato = await Contato.create({email, nome, telefone, cidade});
             console.log(contato)
 
         return res.json({ contato });

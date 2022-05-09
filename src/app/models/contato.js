@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
         type:Number,
         require: true,
     },
-    duvidas: {
+    cidade: {
         type:String,
         require: true,
     },

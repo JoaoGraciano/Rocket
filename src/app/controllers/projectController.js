@@ -156,10 +156,78 @@ router.put('/update', async (req, res) => {
     }
 });
 
-router.delete('/:contatoId', async (req, res) => {
+router.put('/updateUser', async (req, res) => {
     try {
-        await Contato.findByIdAndRemove(req.params.contatoId)
-        console.log(req.params.contatoId, '1')
+        const { name, email, password } = req.body;
+
+        const project = await User.findByIdAndUpdate(req.params.userId, {
+            name, email, password }, {new: true});
+
+            project.tasks = [];
+            await User.remove({project:project._id});
+
+        await Promise.all (tasks.map(async task => {
+            const projectTask = new User({... name, email, password : project._id});
+
+            await projectTask.save();
+
+            project.tasks.push(projectTask);
+        }));
+
+        await project.save();
+
+        return res.send({project});
+    } catch (err) {
+        console.log(err);
+        console.log("erro aqui2")
+        return res.status(400).send({error: 'Error creating new project'});
+    }
+});
+
+router.put('/lead/:id', async (req, res) => {
+    try {
+        const { email, nome, telefone, cidade } = req.body;
+        console.log('1')
+        const project = await Contato.findByIdAndUpdate(req.params._id, {
+            email, nome, telefone, cidade  }, {new: true});
+            console.log(project._id)
+            console.log('2')
+            await Task.remove({project: project._id});
+
+            // await Contato.remove({project:project._id});
+
+        await Promise.all (tasks.map(async task => {
+            const projectTask = new Contato({... email, nome, telefone, cidade  : project._id});
+
+            await projectTask.save();
+
+            project.tasks.push(projectTask);
+        }));
+
+        await project.save();
+
+        return res.send({project});
+    } catch (err) {
+        console.log(err);
+        console.log("erro aqui3")
+        return res.status(400).send({error: 'Error creating new project'});
+    }
+});
+
+router.delete('/user/:id', async (req, res) => {
+    try {
+        await User.findByIdAndRemove(req.params.id)
+        console.log(req.params.id, '11')
+      return res.status(200).json()
+    } catch (error) {
+      return res.status(400).json({ error: 'Error deleting contato' })
+    }
+});
+
+router.delete('/contato/:id', async (req, res) => {
+    try {
+        await Contato.findByIdAndRemove(req.params.id)
+        console.log(req.params.id, '12')
       return res.status(200).json()
     } catch (error) {
       return res.status(400).json({ error: 'Error deleting contato' })
