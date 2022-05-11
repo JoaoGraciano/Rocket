@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
         require: true,
     },
     valor: {
-        type:String,
+        type:Number,
         require: true,
     },
     user: {
