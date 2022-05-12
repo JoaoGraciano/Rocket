@@ -193,39 +193,62 @@ router.put("/update", async (req, res) => {
   }
 });
 
-router.put("/updateUser", async (req, res) => {
+// router.put("/updateUser:id", async (req, res) => {
+//   try {
+//     const { name, email, password } = req.body;
+
+//     const project = await User.findByIdAndUpdate(
+//       req.params.userId,
+//       {
+//         name,
+//         email,
+//         password,
+//       },
+//       { new: true }
+//     );
+
+//     project.tasks = [];
+//     await User.remove({ project: project._id });
+
+//     await Promise.all(
+//       tasks.map(async (task) => {
+//         const projectTask = new User({ ...name, email, password: project._id });
+
+//         await projectTask.save();
+
+//         project.tasks.push(projectTask);
+//       })
+//     );
+
+//     await project.save();
+
+//     return res.send({ project });
+//   } catch (err) {
+//     console.log(err);
+//     console.log("erro aqui2");
+//     return res.status(400).send({ error: "Error creating new project" });
+//   }
+// });
+
+router.put("/updateUser/:_id", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const project = await User.findByIdAndUpdate(
-      req.params.userId,
+    const project = await User.findOneAndUpdate(
+      { _id: req.params._id },
       {
-        name,
-        email,
-        password,
-      },
-      { new: true }
+        name, email, password
+      }
     );
-
-    project.tasks = [];
-    await User.remove({ project: project._id });
-
-    await Promise.all(
-      tasks.map(async (task) => {
-        const projectTask = new User({ ...name, email, password: project._id });
-
-        await projectTask.save();
-
-        project.tasks.push(projectTask);
-      })
-    );
-
-    await project.save();
+    if (!project) {
+        return res.status(400).send({ error: "Error find project" });
+    }
+        await project.save();
 
     return res.send({ project });
   } catch (err) {
     console.log(err);
-    console.log("erro aqui2");
+    console.log("4");
     return res.status(400).send({ error: "Error creating new project" });
   }
 });
@@ -237,7 +260,7 @@ router.put("/lead/:id", async (req, res) => {
     const project = await Contato.findOneAndUpdate(
       { _id: req.params.id },
       {
-        email,        nome,        telefone,        cidade,
+        email, nome, telefone, cidade,
       }
     );
 
