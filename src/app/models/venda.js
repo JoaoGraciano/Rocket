@@ -19,13 +19,21 @@ const UserSchema = new mongoose.Schema({
         type:String,
         require: true,
     },
-    curso: {
+    clickedRows: {
         type:String,
         require: true,
     },
-    valor: {
+    valor_total: {
         type:Number,
         require: true,
+    },
+    total_pago: {
+        type:Number,
+        require: true
+    },
+    troco: {
+        type: Number,
+        require: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

@@ -82,13 +82,13 @@ router.post('/contato', async (req, res) => {
 });
 
 router.post('/venda',authMiddleware, async (req, res) => {
-    let { nome, cpf, cidade, idade, curso, valor } = req.body;
+    let { nome, cpf, cidade, idade, clickedRows, valor_total, valor_pago, troco } = req.body;
     const user = req.userId
     try{
         if( await Venda.findOne({ cpf }))
             return res.status(400).send({error: 'Venda não foi realizada'});
 
-            const venda = await Venda.create({nome, cpf, cidade, idade, curso, valor, user});
+            const venda = await Venda.create({nome, cpf, cidade, idade, clickedRows, valor_total, user, valor_pago, troco});
             console.log(venda)
 
         return res.json({ venda });

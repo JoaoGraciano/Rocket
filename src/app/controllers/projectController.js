@@ -107,7 +107,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:projectId", async (req, res) => {
   try {
-    const { nome, cpf, cidade, idade, curso, valor } = req.body;
+    const { nome, cpf, cidade, idade, curso, valor_total } = req.body;
 
     const project = await Venda.findByIdAndUpdate(
       req.params.projectId,
@@ -129,7 +129,7 @@ router.put("/:projectId", async (req, res) => {
           cidade,
           idade,
           curso,
-          valor: project._id,
+          valor_total: project._id,
         });
 
         await projectTask.save();
@@ -237,20 +237,13 @@ router.put("/lead/:id", async (req, res) => {
     const project = await Contato.findOneAndUpdate(
       { _id: req.params.id },
       {
-        email,
-        nome,
-        telefone,
-        cidade,
+        email,        nome,        telefone,        cidade,
       }
     );
 
     if (!project) {
         return res.status(400).send({ error: "Error find project" });
     }
-    await project.save();
-    console.log(project);
-    console.log("2");
-
         await project.save();
 
     return res.send({ project });
@@ -261,27 +254,19 @@ router.put("/lead/:id", async (req, res) => {
   }
 });
 
-router.put("/Curso/:id", async (req, res) => {
+router.put("/Curso/:_id", async (req, res) => {
     try {
       const { curso, grau, duracao, valor, descricao } = req.body;
-      console.log(project)
-      console.log("1")
+
       const project = await Cad.findOneAndUpdate(
-        { _id: req.params.id },
+        { _id: req.params._id },
         {
             curso, grau, duracao, valor, descricao
         }
-        
       );
-      console.log(project)
-      console.log("2")
-  
       if (!project) {
           return res.status(400).send({ error: "Error find project" });
       }
-      console.log(project);
-      console.log("3");
-  
           await project.save();
   
       return res.send({ project });
