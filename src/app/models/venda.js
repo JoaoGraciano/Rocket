@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
         type:Number,
         require: true,
     },
-    total_pago: {
+    valorPago: {
         type:Number,
         require: true
     },
