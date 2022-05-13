@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
         type:String,
         require: true,
     },
-    clickedRows: {
+    cursos: {
         type:String,
         require: true,
     },
