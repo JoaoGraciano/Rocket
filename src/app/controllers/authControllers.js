@@ -22,6 +22,7 @@ const { transporter } = require('../../modules/mailer');
 const transport = require('../../modules/mailer');
 const Venda = require('../models/venda');
 const Contato = require('../models/contato');
+const Alunos = require('../models/alunos');
 
 const router = express.Router();
 
@@ -84,15 +85,33 @@ router.post('/contato', async (req, res) => {
 router.post('/venda',authMiddleware, async (req, res) => {
     let { nome, cpf, cidade, idade, cursos, valor_total, valorPago, troco } = req.body;
     const user = req.userId
+
     try{
         if( await Venda.findOne({ cpf }))
             return res.status(400).send({error: 'Venda não foi realizada'});
-
             const venda = await Venda.create({nome, cpf, cidade, idade, cursos, valor_total, user, valorPago, troco});
             console.log(venda)
 
         return res.json({ venda });
     } catch (err) {
+        return res.status(400).send({error: err});
+    }
+});
+
+router.post('/aluno', async (req, res) => {
+    let { nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos } = req.body;
+    try{
+        console.log('erro1')
+        if( await Alunos.findOne({ cpf }))
+            return res.status(400).send({error: 'Aluno já existe'});
+            console.log('erro2')
+
+        const alunos = await Alunos.create({ nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos }); console.log('erro3')
+
+        return res.json({ alunos });
+    } catch (err) {
+        console.log('erro4')
+        console.log(err)
         return res.status(400).send({error: err});
     }
 });

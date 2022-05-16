@@ -9,6 +9,7 @@ const Cad = require("../models/cadastro");
 const Venda = require("../models/venda");
 const User = require("../models/user");
 const Contato = require("../models/contato");
+const Alunos = require("../models/alunos");
 
 const router = express.Router();
 
@@ -57,6 +58,16 @@ router.get("/contato", async (req, res) => {
 router.get("/Cad", async (req, res) => {
   try {
     const projects = await Cad.find();
+
+    return res.send({ projects });
+  } catch (err) {
+    return res.status(400).send({ error: "Error loading project" });
+  }
+});
+
+router.get("/aluno", async (req, res) => {
+  try {
+    const projects = await Alunos.find();
 
     return res.send({ projects });
   } catch (err) {
@@ -193,42 +204,29 @@ router.put("/update", async (req, res) => {
   }
 });
 
-// router.put("/updateUser:id", async (req, res) => {
-//   try {
-//     const { name, email, password } = req.body;
+router.put("/updateAlunos/:_id", async (req, res) => {
+  try {
+    const { nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos } = req.body;
 
-//     const project = await User.findByIdAndUpdate(
-//       req.params.userId,
-//       {
-//         name,
-//         email,
-//         password,
-//       },
-//       { new: true }
-//     );
+    const project = await Alunos.findOneAndUpdate(
+      { _id: req.params._id },
+      {
+        nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos
+      }
+    );
+    if (!project) {
+        return res.status(400).send({ error: "Error find project" });
+    }
+        await project.save();
 
-//     project.tasks = [];
-//     await User.remove({ project: project._id });
+    return res.send({ project });
+  } catch (err) {
+    console.log(err);
+    console.log("4");
+    return res.status(400).send({ error: "Error creating new project" });
+  }
+});
 
-//     await Promise.all(
-//       tasks.map(async (task) => {
-//         const projectTask = new User({ ...name, email, password: project._id });
-
-//         await projectTask.save();
-
-//         project.tasks.push(projectTask);
-//       })
-//     );
-
-//     await project.save();
-
-//     return res.send({ project });
-//   } catch (err) {
-//     console.log(err);
-//     console.log("erro aqui2");
-//     return res.status(400).send({ error: "Error creating new project" });
-//   }
-// });
 
 router.put("/updateUser/:_id", async (req, res) => {
   try {
