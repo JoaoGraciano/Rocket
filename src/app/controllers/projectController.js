@@ -318,6 +318,16 @@ router.delete("/contato/:id", async (req, res) => {
   }
 });
 
+router.delete("/aluno/:id", async (req, res) => {
+  try {
+    await Alunos.findByIdAndRemove(req.params.id);
+    console.log(req.params.id, "12");
+    return res.status(200).json();
+  } catch (error) {
+    return res.status(400).json({ error: "Error deleting contato" });
+  }
+});
+
 router.delete("/:cadId", async (req, res) => {
   try {
     await Cad.findByIdAndRemove(req.params.cadId);

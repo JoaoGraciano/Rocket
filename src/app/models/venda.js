@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         require: true,
     },
     cursos: {
-        type:Array,
+        type: Array,
         require: true,
     },
     email: {
