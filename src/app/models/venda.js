@@ -3,20 +3,8 @@ const bcrypt = require('bcryptjs');
 const { json } = require('body-parser');
 
 const UserSchema = new mongoose.Schema({
-    nome: {
-        type:String,
-        require: true,
-    },
-    cidade: {
-        type:String,
-        require: true,
-    },
-    cpf: {
-        type:Number,
-        require:true,
-    },
-    idade: {
-        type:String,
+    aluno: {
+        type:Object,
         require: true,
     },
     cursos: {
