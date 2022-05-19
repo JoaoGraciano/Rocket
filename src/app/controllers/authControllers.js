@@ -83,13 +83,15 @@ router.post('/contato', async (req, res) => {
 });
 
 router.post('/venda',authMiddleware, async (req, res) => {
-    let { aluno, cursos, valor_total, valorPago, troco } = req.body;
-    const user = req.userId
+
+
+    let { aluno, cursos, valor_total, valorPago, troco, user } = req.body;
+    // const user = req.userId
 
     try{
         if( await Venda.findOne({ user }))
 
-            await Venda.create({ aluno, cursos, valor_total, user, valorPago, troco});
+            await Venda.create({ aluno, cursos, valor_total, user, valorPago, troco, user});
 
 
         return res.json({ venda });
