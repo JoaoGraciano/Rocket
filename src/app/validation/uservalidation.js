@@ -23,6 +23,7 @@ const authVenda = Joi.object({
     valor_total: Joi.number().required(),
     valorPago: Joi.number().required(),
     troco: Joi.number().required(),
+    user: Joi.object(),
     _id: Joi.string().allow(null),
 })
 

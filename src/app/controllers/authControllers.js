@@ -74,6 +74,7 @@ router.post("/cadastro", async (req, res) => {
 
 router.post("/contato", async (req, res) => {
   let { email, nome, telefone, cidade } = req.body;
+
   try {
     let result = authLead.validate(req.body);
     console.log(result);
@@ -81,9 +82,7 @@ router.post("/contato", async (req, res) => {
     if (result?.error){
         return res.status(400).send({ error: "Erro ao cadastrar o curso." });
     } else if (await Contato.findOne({ email })) {
-      return res
-        .status(400)
-        .send({ error: "E-mail já utilizado para contato" });
+      return res.status(422).json(result.error);
     } else {
       const contato = await Contato.create({ email, nome, telefone, cidade });
       console.log(contato);
@@ -103,9 +102,10 @@ router.post("/venda", authMiddleware, async (req, res) => {
     let result = authVenda.validate(req.body);
     console.log(result);
 
-    if (result?.error){
-        return res.status(400).send({ error: "Erro ao realizar venda." });
-    } else if (await Venda.findOne({ user }))
+    if (result?.error) {
+      return res.status(422).json(result.error);
+    } else if (await Venda.findOne({ user })){
+
       await Venda.create({
         aluno,
         cursos,
@@ -114,10 +114,12 @@ router.post("/venda", authMiddleware, async (req, res) => {
         valorPago,
         troco,
         user,
-      });
+      })
 
-    return res.json({ venda });
+      return res.json({ Venda })
+    }
   } catch (err) {
+    console.log('1')
     return res.status(400).send({ error: err });
   }
 });
