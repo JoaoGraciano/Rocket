@@ -2,6 +2,13 @@ const express = require("express");
 const { use } = require("../../modules/mailer");
 
 const authMiddleware = require("../middlewares/auth");
+const {
+  authSchema,
+  authCurso,
+  authVenda,
+  authAluno,
+  authLead,
+} = require("../validation/uservalidation");
 
 const Project = require("../models/project");
 const Task = require("../models/task");
@@ -206,18 +213,42 @@ router.put("/update", async (req, res) => {
 
 router.put("/updateAlunos/:_id", async (req, res) => {
   try {
-    const { nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos } = req.body;
+    const {
+      nome,
+      idade,
+      cpf,
+      telefone,
+      endereco,
+      email,
+      cidade,
+      estado,
+      cep,
+      cursos,
+    } = req.body;
+
+    let result = authAluno.validate(req.body);
+    console.log(result);
+
+    if (result?.error){
+        return res.status(400).send({ error: "Erro ao cadastrar o curso." });
+    }
 
     const project = await Alunos.findOneAndUpdate(
       { _id: req.params._id },
       {
-        nome, idade, cpf, telefone, endereco, email, cidade, estado, cep, cursos
+        nome,
+        idade,
+        cpf,
+        telefone,
+        endereco,
+        email,
+        cidade,
+        estado,
+        cep,
+        cursos,
       }
     );
-    if (!project) {
-        return res.status(400).send({ error: "Error find project" });
-    }
-        await project.save();
+    await project.save();
 
     return res.send({ project });
   } catch (err) {
@@ -227,21 +258,26 @@ router.put("/updateAlunos/:_id", async (req, res) => {
   }
 });
 
-
 router.put("/updateUser/:_id", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    let result = authSchema.validate(req.body);
+    console.log(result);
+
+    if (result?.error) {
+      return res.status(422).json(result.error);
+    }
+
     const project = await User.findOneAndUpdate(
       { _id: req.params._id },
       {
-        name, email, password
+        name,
+        email,
+        password,
       }
     );
-    if (!project) {
-        return res.status(400).send({ error: "Error find project" });
-    }
-        await project.save();
+    await project.save();
 
     return res.send({ project });
   } catch (err) {
@@ -254,18 +290,25 @@ router.put("/updateUser/:_id", async (req, res) => {
 router.put("/lead/:id", async (req, res) => {
   try {
     const { email, nome, telefone, cidade } = req.body;
-    
+
+    let result = authLead.validate(req.body);
+    console.log(result);
+
+    if (result?.error) {
+      return res.status(422).json(result.error);
+    }
+
     const project = await Contato.findOneAndUpdate(
       { _id: req.params.id },
       {
-        email, nome, telefone, cidade,
+        email,
+        nome,
+        telefone,
+        cidade,
       }
     );
 
-    if (!project) {
-        return res.status(400).send({ error: "Error find project" });
-    }
-        await project.save();
+    await project.save();
 
     return res.send({ project });
   } catch (err) {
@@ -276,27 +319,34 @@ router.put("/lead/:id", async (req, res) => {
 });
 
 router.put("/Curso/:_id", async (req, res) => {
-    try {
-      const { curso, grau, duracao, valor, descricao } = req.body;
+  try {
+    const { curso, grau, duracao, valor, descricao } = req.body;
 
-      const project = await Cad.findOneAndUpdate(
-        { _id: req.params._id },
-        {
-            curso, grau, duracao, valor, descricao
-        }
-      );
-      if (!project) {
-          return res.status(400).send({ error: "Error find project" });
-      }
-          await project.save();
-  
-      return res.send({ project });
-    } catch (err) {
-      console.log(err);
-      console.log("4");
-      return res.status(400).send({ error: "Error creating new project" });
+    let result = authCurso.validate(req.body);
+    console.log(result);
+
+    if (result?.error) {
+      return res.status(400).send({ error: "Erro ao cadastrar o curso." });
     }
-  });
+    const project = await Cad.findOneAndUpdate(
+      { _id: req.params._id },
+      {
+        curso,
+        grau,
+        duracao,
+        valor,
+        descricao,
+      }
+    );
+    await project.save();
+
+    return res.send({ project });
+  } catch (err) {
+    console.log(err);
+    console.log("4");
+    return res.status(400).send({ error: "Error creating new project" });
+  }
+});
 
 router.delete("/user/:id", async (req, res) => {
   try {

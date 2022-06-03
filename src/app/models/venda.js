@@ -11,10 +11,6 @@ const UserSchema = new mongoose.Schema({
         type: Array,
         require: true,
     },
-    email: {
-        type: String,
-        require: true,
-    },
     valor_total: {
         type:Number,
         require: true,

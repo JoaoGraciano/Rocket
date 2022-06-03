@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const mailer = require("../../modules/mailer");
-const { authSchema, authCurso } = require("../validation/uservalidation");
+const { authSchema, authCurso, authVenda, authAluno, authLead } = require("../validation/uservalidation");
 
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
@@ -33,7 +33,7 @@ function geneateToken(params = {}) {
 }
 
 router.post("/register", async (req, res) => {
-  let { name, email, password } = req.body;
+  let { name, email, password, _id } = req.body;
 
   try {
     let result = authSchema.validate(req.body);
@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     password = hash;
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, _id });
     console.log(user);
     user.password = undefined;
 
@@ -75,15 +75,22 @@ router.post("/cadastro", async (req, res) => {
 router.post("/contato", async (req, res) => {
   let { email, nome, telefone, cidade } = req.body;
   try {
-    if (await Contato.findOne({ email }))
+    let result = authLead.validate(req.body);
+    console.log(result);
+
+    if (result?.error){
+        return res.status(400).send({ error: "Erro ao cadastrar o curso." });
+    } else if (await Contato.findOne({ email })) {
       return res
         .status(400)
         .send({ error: "E-mail já utilizado para contato" });
+    } else {
+      const contato = await Contato.create({ email, nome, telefone, cidade });
+      console.log(contato);
+  
+      return res.json({ contato });
+    }
 
-    const contato = await Contato.create({ email, nome, telefone, cidade });
-    console.log(contato);
-
-    return res.json({ contato });
   } catch (err) {
     return res.status(400).send({ error: err });
   }
@@ -93,7 +100,12 @@ router.post("/venda", authMiddleware, async (req, res) => {
   let { aluno, cursos, valor_total, valorPago, troco, user } = req.body;
 
   try {
-    if (await Venda.findOne({ user }))
+    let result = authVenda.validate(req.body);
+    console.log(result);
+
+    if (result?.error){
+        return res.status(400).send({ error: "Erro ao realizar venda." });
+    } else if (await Venda.findOne({ user }))
       await Venda.create({
         aluno,
         cursos,
@@ -124,6 +136,12 @@ router.post("/aluno", async (req, res) => {
     cursos,
   } = req.body;
   try {
+    let result = authAluno.validate(req.body);
+    console.log(result);
+
+    if (result?.error){
+        return res.status(400).send({ error: "Erro ao cadastrar o curso." });
+    }
     console.log("erro1");
     if (await Alunos.findOne({ cpf }))
       return res.status(400).send({ error: "Aluno já existe" });
