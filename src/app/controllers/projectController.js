@@ -388,14 +388,16 @@ router.delete("/:cadId", async (req, res) => {
   }
 });
 
-router.delete("/:vendaId", async (req, res) => {
+router.delete("/:venda/:id", async (req, res) => {
   try {
-    await Venda.findByIdAndRemove(req.params.vendaId);
-    console.log(req.params.vendaId, "2");
+    await Venda.findByIdAndRemove(req.params.id);
+    console.log(req.params.id, "2");
     return res.status(200).json();
   } catch (error) {
     return res.status(400).json({ error: "Error deleting venda" });
   }
 });
+
+
 
 module.exports = (app) => app.use("/projects", router);
